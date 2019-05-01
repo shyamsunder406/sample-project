@@ -1,0 +1,47 @@
+import requests
+import json
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
+
+def login(base_url, api_login, api_password):
+    print("getting token..")
+    data_get = {'username': api_login,
+                'password': api_password,
+                'loginMode': 1}
+    r = requests.post(base_url, data=data_get, verify=False)
+    if r.ok:
+        # authToken = r.headers['AuthToken']
+        print(r.text)
+        cookies = dict(r.cookies)
+        # print("Token" + authToken)
+        # return authToken
+        return
+    else:
+        print("HTTP%i-%s, Message %s" % (r.status_code, r.reason, r.text))
+
+def get_account_info():
+    api_url =''
+
+    response = requests.get(api_url, verify=False, headers=headers)
+    print(response.text)
+    if response.status_code == 200:
+        return json.loads(response.content.decode('utf-8'))
+    else:
+        return None
+
+headers = {
+    'toolkit-token': "",
+    'accept': "application/json",
+    'Cache-Control': "no-cache",
+}
+
+account_info = get_account_info()
+
+print(account_info['data'][0])
+if account_info is not None:
+    for k in account_info['data']:
+        for i,v in k.items():
+                print('{0}:{1}'.format(i,v))
+else:
+    print('[!] Request Failed')
