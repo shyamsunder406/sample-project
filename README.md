@@ -1,0 +1,41 @@
+# sample-project
+api calls
+
+
+
+Install python - Request in My Technology portal to install python latest version in your system. Click here to request.
+IDE - Request in My Technology portal to install pycharm or any IDE.  
+
+Setting up Python in Windows:
+ 
+Set the system’s PATH variable to include directories that include Python components and packages we’ll add later. To do this:
+•	Right-click Computer and select Properties.
+•	In the dialog box, select Advanced System Settings.
+•	In the next dialog, select Environment Variables.
+•	In the User Variables section, edit the PATH statement to include this
+OR
+U can use pycharm terminal. (Preferred)
+Set up useful Python packages:
+ Setup tools offers the helpful easy install utility for installing Python packages. Grab the appropriate version for your system and install
+Pip is another package installer that improves on setup tools
+easy_install pip
+After installing pycharm is system 
+ - To start new project (pycharm)
+      Go to Files\new project
+- Set up python Interpreter (pycharm)
+     Go to Files\settings\project\project interpreter
+Example- C:\Users\Zxzxzxz\PycharmProjects\projectname\venv\Scripts\python.exe
+Check the packages below
+To download and install required packages 
+-Go to package Manager and install the packages 
+                  OR 
+-Download requests.tar.gz file and install (pip install requests.tar.gz) 
+Click here https://artifacts.horizon.bankofamerica.com/artifactory/webapp/#/home to download required package. (USE search bar)and install the package.
+
+This script is designed to pull dynamic data of associate through REST API. It uses CSV file with list of associate IDs as input parameter and generates report for all the associate in CSV file. It performs user input validation before it execute associate API to fetch associate data.
+It requires a valid access token to call associate API. Output is processed in CSV file in the same folder as this script is being executed.
+This script uses python packages to perform the desired task as 
+-CSV
+-SYS
+-JSON
+-REQUESTS
