@@ -30,7 +30,7 @@ To download and install required packages
 -Go to package Manager and install the packages 
                   OR 
 -Download requests.tar.gz file and install (pip install requests.tar.gz) 
-Click here https://artifacts.horizon.bankofamerica.com/artifactory/webapp/#/home to download required package. (USE search bar)and install the package.
+Click here  to download required package. (USE search bar)and install the package.
 
 This script is designed to pull dynamic data of associate through REST API. It uses CSV file with list of associate IDs as input parameter and generates report for all the associate in CSV file. It performs user input validation before it execute associate API to fetch associate data.
 It requires a valid access token to call associate API. Output is processed in CSV file in the same folder as this script is being executed.
