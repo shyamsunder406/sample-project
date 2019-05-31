@@ -1,7 +1,7 @@
 import json
 import requests
 import csv
-import configparser
+import sys
 
 
 def login(base_url, api_login, api_password):
@@ -11,16 +11,14 @@ def login(base_url, api_login, api_password):
                 'loginMode': 1}
     r = requests.post(base_url, data=data_get)
     if r.ok:
-        authToken = r.headers['AuthToken']
-        cookies = dict(r.cookies)
-        print("Token: " + authToken)
-        return authToken
+        auth_token = r.headers['AuthToken']
+        print("Token: " + auth_token)
+        return auth_token
     else:
         print("HTTP %i - %s, Message %s" % (r.status_code, r.reason, r.text))
 
 
 def get_sessions(base_url, auth_token, cookies):
-    print("Checking session...")
     header_gs = {'AuthToken': auth_token,
                  'Accept': 'application/json'}
     r = requests.get(base_url + "sessions", headers=header_gs, cookies=cookies)
@@ -34,7 +32,7 @@ def get_sessions(base_url, auth_token, cookies):
 
 def get_account_info(associates):
     if associates != "":
-        api_url = '<url>/v1/associates/?PageSize=100&personNumber=%s' % (associates)
+        api_url = '<url>/v1/applications/?PageSize=100&personNumber=%s' % (associates)
     else:
         print("Invalid arguments, Please provide valid Person Number")
         return None
@@ -55,11 +53,33 @@ headers = {
 }
 
 
-config = configparser.ConfigParser()
-config.read('associate.ini')
-sections = config.sections()
+if len(sys.argv) != 2:
+    print("Usage: python api.py <filepath>")
+    exit(1)
 
-account_info = get_account_info(config['input']['AssociateIds'])
+toolkit_token = input("Enter GIS Toolkit Token: ")
+
+if not toolkit_token:
+    print("Invalid Toolkit Token!. Enter Correct Token")
+    exit(1)
+
+headers["toolkit-token"] = toolkit_token
+
+associate_ids = ""
+
+with open(sys.argv[1]) as csv_file:
+    csv_reader = csv.reader(csv_file, delimeter=',')
+    line_count = 0
+    for row in csv_reader:
+        if line_count == 0:
+            print(f'Column Name is {",".join(row)}')
+        else:
+            associate_ids = row[0].strip() + "," + associate_ids
+        line_count = line_count + 1
+    print(f'Associate Ids are {associate_ids}')
+
+
+account_info = get_account_info(associate_ids)
 
 if account_info is not None:
 
@@ -75,7 +95,11 @@ if account_info is not None:
     writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
     writer.writeheader()
     for k in account_info['data']:
-        writer.writerow(k)
+        result = dict()
+        for key in k.keys():
+            if key in fieldnames:
+                result[key] = k[key]
+        writer.writerow(result)
     csv_file.close()
 else:
     print('[!] Request Failed')
