@@ -78,11 +78,7 @@ with open(sys.argv[1]) as csv_file:
         line_count = line_count + 1
     print(f'Associate Ids are {associate_ids}')
 
-
-account_info = get_account_info(associate_ids)
-
-if account_info is not None:
-
+if associate_ids:
     csv_file = open('CompletionReportAssociate.csv', 'w')
     writer = csv.writer(csv_file, delimiter=',')
     fieldnames = ['firstName', 'lastName','lineOfBusiness', 'facilityAddress', 'exceptionsURI', 'isJointVentureAssociate', 'countriesURI', 'facilityCountryCode', 'displayCostCenter', 'isLOA', 'URI', 'personNumber', 'costCenter',
@@ -94,12 +90,15 @@ if account_info is not None:
                   'lastJobCodeChangeDate', 'lastJobCode','preferredName','loaStartDate','preferredTelepresence']
     writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
     writer.writeheader()
-    for k in account_info['data']:
-        result = dict()
-        for key in k.keys():
-            if key in fieldnames:
-                result[key] = k[key]
-        writer.writerow(result)
+    for c in range(0, len(associate_ids, 100)):
+        account_info = get_account_info(associate_ids[c:c+100])
+        if account_info:
+            for k in account_info['data']:
+                result = dict()
+                for key in k.keys():
+                    if key in fieldnames:
+                        result[key] = k[key]
+                writer.writerow(result)
     csv_file.close()
 else:
     print('[!] Request Failed')
